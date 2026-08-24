@@ -92,3 +92,142 @@ SELECT *
 FROM products
 WHERE category NOT IN ('Electronics', 'Gaming');
 
+
+-- =========================================================
+-- 5. BETWEEN — Range filtering (inclusive)
+-- =========================================================
+
+-- Products priced between $100 and $500
+SELECT *
+FROM products
+WHERE price BETWEEN 100 AND 500;
+
+-- Orders from 2024
+SELECT *
+FROM orders
+WHERE order_date BETWEEN '2024-01-01' AND '2024-12-31';
+
+-- Products with stock between 10 and 50
+SELECT *
+FROM products
+WHERE stock_quantity BETWEEN 10 AND 50;
+
+-- NOT BETWEEN (exclude range)
+SELECT *
+FROM products
+WHERE price NOT BETWEEN 100 AND 500;
+
+
+-- =========================================================
+-- 6. LIKE — Pattern matching
+-- =========================================================
+
+-- Starts with 'J'
+SELECT *
+FROM customers
+WHERE first_name LIKE 'J%';
+
+-- Ends with 'gmail.com'
+SELECT *
+FROM customers
+WHERE email LIKE '%gmail.com';
+
+-- Contains 'Pro'
+SELECT *
+FROM products
+WHERE product_name LIKE '%Pro%';
+
+-- Exactly 4 letters starting with 'J'
+SELECT *
+FROM customers
+WHERE first_name LIKE 'J___';
+
+-- NOT LIKE (exclude pattern)
+SELECT *
+FROM customers
+WHERE email NOT LIKE '%gmail.com';
+
+-- Multiple LIKE conditions
+SELECT *
+FROM customers
+WHERE email LIKE '%gmail.com'
+   OR email LIKE '%yahoo.com';
+
+
+-- =========================================================
+-- 7. CASE WHEN — Conditional logic
+-- =========================================================
+
+-- Basic CASE: Price categories
+SELECT 
+    product_name,
+    price,
+    CASE 
+        WHEN price < 100 THEN 'Budget'
+        WHEN price < 500 THEN 'Mid-Range'
+        WHEN price < 1000 THEN 'Premium'
+        ELSE 'Luxury'
+    END AS price_category
+FROM products;
+
+-- CASE with multiple conditions
+SELECT 
+    first_name,
+    last_name,
+    customer_segment,
+    CASE 
+        WHEN customer_segment = 'Premium' THEN 'High Priority'
+        WHEN customer_segment = 'Regular' THEN 'Medium Priority'
+        WHEN customer_segment = 'Student' THEN 'Low Priority'
+        ELSE 'Other'
+    END AS priority_level
+FROM customers;
+
+-- CASE with order status
+SELECT 
+    order_id,
+    order_status,
+    total_amount,
+    CASE 
+        WHEN order_status = 'Completed' THEN 'Closed'
+        WHEN order_status = 'Shipped' THEN 'In Transit'
+        WHEN order_status = 'Delivered' THEN 'Fulfilled'
+        ELSE 'Processing'
+    END AS order_stage
+FROM orders;
+
+-- CASE with numbers
+SELECT 
+    product_name,
+    stock_quantity,
+    CASE 
+        WHEN stock_quantity = 0 THEN 'Out of Stock'
+        WHEN stock_quantity < 10 THEN 'Low Stock'
+        WHEN stock_quantity < 50 THEN 'In Stock'
+        ELSE 'Well Stocked'
+    END AS stock_status
+FROM products;
+
+
+-- =========================================================
+-- 8. CASE with Aggregations (GROUP BY)
+-- =========================================================
+
+-- Count products by price category
+SELECT 
+    CASE 
+        WHEN price < 100 THEN 'Budget'
+        WHEN price < 500 THEN 'Mid-Range'
+        WHEN price < 1000 THEN 'Premium'
+        ELSE 'Luxury'
+    END AS price_category,
+    COUNT(*) AS product_count
+FROM products
+GROUP BY 
+    CASE 
+        WHEN price < 100 THEN 'Budget'
+        WHEN price < 500 THEN 'Mid-Range'
+        WHEN price < 1000 THEN 'Premium'
+        ELSE 'Luxury'
+    END
+ORDER BY product_count DESC;
