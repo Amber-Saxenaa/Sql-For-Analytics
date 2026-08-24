@@ -309,3 +309,28 @@ FROM customers
 WHERE customer_segment IN ('Premium', 'Regular')
   AND state IN ('CA', 'NY', 'TX', 'FL')
 ORDER BY tier, last_name;
+
+
+-- =========================================================
+-- 12. Order Analysis with CASE
+-- =========================================================
+
+SELECT 
+    order_id,
+    order_date,
+    total_amount,
+    CASE 
+        WHEN total_amount > 2000 THEN 'High Value'
+        WHEN total_amount > 1000 THEN 'Medium Value'
+        ELSE 'Low Value'
+    END AS order_tier,
+    CASE 
+        WHEN order_status = 'Completed' THEN 'Done'
+        WHEN order_status = 'Shipped' THEN 'On Its Way'
+        WHEN order_status = 'Delivered' THEN 'Received'
+        ELSE 'Pending'
+    END AS status_description
+FROM orders
+WHERE order_status IN ('Completed', 'Shipped', 'Delivered')
+  AND total_amount BETWEEN 500 AND 5000
+ORDER BY total_amount DESC;
