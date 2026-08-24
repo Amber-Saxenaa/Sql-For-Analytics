@@ -231,3 +231,81 @@ GROUP BY
         ELSE 'Luxury'
     END
 ORDER BY product_count DESC;
+
+
+-- =========================================================
+-- 9. CASE in ORDER BY (Custom Sorting)
+-- =========================================================
+
+-- Custom sorting: Premium → Regular → Student
+SELECT *
+FROM customers
+ORDER BY 
+    CASE customer_segment
+        WHEN 'Premium' THEN 1
+        WHEN 'Regular' THEN 2
+        WHEN 'Student' THEN 3
+        ELSE 4
+    END,
+    last_name;
+
+
+-- =========================================================
+-- 10. Combining All Filtering Methods
+-- =========================================================
+
+-- Complex query with AND, OR, IN, BETWEEN, LIKE, CASE
+SELECT 
+    product_name,
+    category,
+    price,
+    stock_quantity,
+    CASE 
+        WHEN price < 100 THEN 'Budget'
+        WHEN price < 500 THEN 'Mid-Range'
+        WHEN price < 1000 THEN 'Premium'
+        ELSE 'Luxury'
+    END AS price_tier,
+    CASE 
+        WHEN stock_quantity = 0 THEN 'Out of Stock'
+        WHEN stock_quantity < 10 THEN 'Low Stock'
+        ELSE 'In Stock'
+    END AS stock_status
+FROM products
+WHERE category IN ('Electronics', 'Gaming')
+  AND price BETWEEN 100 AND 1500
+  AND (product_name LIKE '%Pro%' OR product_name LIKE '%Ultra%')
+  AND stock_quantity > 0
+ORDER BY 
+    CASE 
+        WHEN price < 100 THEN 1
+        WHEN price < 500 THEN 2
+        WHEN price < 1000 THEN 3
+        ELSE 4
+    END,
+    price DESC;
+
+-- =========================================================
+-- 11. Customer Analysis with CASE
+-- =========================================================
+
+-- Customer segmentation by location and segment
+SELECT 
+    first_name,
+    last_name,
+    state,
+    customer_segment,
+    CASE 
+        WHEN state IN ('CA', 'NY', 'TX') THEN 'Major State'
+        ELSE 'Other State'
+    END AS state_category,
+    CASE 
+        WHEN customer_segment = 'Premium' AND state IN ('CA', 'NY') THEN 'Gold'
+        WHEN customer_segment = 'Premium' THEN 'Silver'
+        WHEN customer_segment = 'Regular' THEN 'Bronze'
+        ELSE 'Basic'
+    END AS tier
+FROM customers
+WHERE customer_segment IN ('Premium', 'Regular')
+  AND state IN ('CA', 'NY', 'TX', 'FL')
+ORDER BY tier, last_name;
