@@ -16,7 +16,7 @@ CREATE TABLE customers (
     state VARCHAR(2),
     zip_code VARCHAR(10),
     registration_date DATE,
-    customer_segment VARCHAR(20)
+    customer_segment VARCHAR(30)
 );
 
 INSERT INTO customers VALUES
