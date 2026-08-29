@@ -231,3 +231,25 @@ WHERE customer_segment = 'Premium'           -- Only Premium
   AND registration_date >= '2024-01-01';     -- Registered in 2024+
 
 --===============================================================================================================================================================================
+
+--✅ 14. COMPLETE PRACTICE EXAMPLE
+
+/*
+   Query: Premium Customers Report
+   Purpose: Show Premium customers from major states
+   Author: Amber
+*/
+SELECT 
+    customer_id AS "ID",                     -- Customer number
+    first_name AS "First Name",              -- First name
+    last_name AS "Last Name",                -- Last name
+    email AS "Email",                        -- Email address
+    state AS "State",                        -- State
+    registration_date AS "Joined"            -- Registration date
+FROM customers                               -- From customers table
+WHERE customer_segment = 'Premium'           -- Only Premium
+  AND state IN ('CA', 'NY', 'TX', 'FL')      -- Only these states
+  AND registration_date >= '2024-01-01';     -- Registered in 2024+
+
+--===============================================================================================================================================================================
+
