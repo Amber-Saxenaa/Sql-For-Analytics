@@ -14,11 +14,9 @@ FROM orders o
 INNER JOIN customers c ON o.customer_id = c.customer_id
 ORDER BY o.order_date DESC;
 
--- =========================================================
 -- Question 2 (LEFT JOIN + NULL Check)
 -- Write a query to find all customers who have NOT placed
 -- any orders. Use LEFT JOIN and check for NULL.
--- =========================================================
 
 -- ANSWER:
 SELECT 
@@ -31,18 +29,9 @@ LEFT JOIN orders o ON c.customer_id = o.customer_id
 WHERE o.order_id IS NULL
 ORDER BY c.customer_id;
 
-/*
-  Expected Output:
-  Shows customers with no orders (o.order_id IS NULL)
-  Example: Amber Saxena (customer_id = 46) if she has no orders
-*/
-
--- =========================================================
 -- Question 3 (Multiple JOINs)
 -- Write a query to show order_id, product_name, quantity,
 -- and unit_price for all orders.
--- (Hint: orders, order_items, and products tables)
--- =========================================================
 
 -- ANSWER:
 SELECT 
@@ -57,19 +46,11 @@ INNER JOIN order_items oi ON o.order_id = oi.order_id
 INNER JOIN products p ON oi.product_id = p.product_id
 ORDER BY o.order_id, oi.order_item_id;
 
-/*
-  Expected Output:
-  Shows each order with its products and quantities
-  Example: Order 1001 → MacBook Pro 16" (1), Logitech MX Master 3S (3)
-*/
-
--- =========================================================
 -- Question 4 (LEFT JOIN with Aggregation)
 -- Write a query to show all products with:
 -- - product_name
 -- - total_quantity_sold (SUM of quantity from order_items)
 -- Use COALESCE to show 0 for products never sold.
--- =========================================================
 
 -- ANSWER:
 SELECT 
@@ -83,13 +64,6 @@ FROM products p
 LEFT JOIN order_items oi ON p.product_id = oi.product_id
 GROUP BY p.product_id, p.product_name, p.category, p.price
 ORDER BY total_quantity_sold DESC;
-
-/*
-  Expected Output:
-  Shows all products with total sales
-  Products never sold show 0 for total_quantity_sold
-  Example: NutriBullet Pro → 0 sold (if never ordered)
-*/
 
 -- =========================================================
 -- Question 5 (SELF JOIN)
