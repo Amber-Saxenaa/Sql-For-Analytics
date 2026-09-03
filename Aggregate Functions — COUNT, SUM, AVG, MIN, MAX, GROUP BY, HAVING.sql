@@ -1,17 +1,6 @@
-/*
-========================================================
-  Aggregate Functions — COUNT, SUM, AVG, MIN, MAX, GROUP BY, HAVING
-  Database: practise (customers, orders, order_items, products)
-========================================================
-  Purpose: Summarize and analyze data using aggregate functions
-  Author: Amber
-  Date: 2026-09-03
-========================================================
-*/
 
 -- =========================================================
 -- 1. COUNT() — Count Rows
--- =========================================================
 
 -- Count total customers
 SELECT COUNT(*) AS total_customers
@@ -91,9 +80,7 @@ FROM order_items;
 
 -- =========================================================
 -- 4. MIN() — Minimum Value
--- =========================================================
 
--- Cheapest product
 SELECT MIN(price) AS cheapest_price
 FROM products;
 
@@ -107,10 +94,7 @@ FROM orders;
 
 
 -- =========================================================
--- 5. MAX() — Maximum Value
--- =========================================================
-
--- Most expensive product
+-- 5. MAX() — Maximum Values
 SELECT MAX(price) AS most_expensive
 FROM products;
 
@@ -157,9 +141,6 @@ FROM products;
 
 -- =========================================================
 -- 7. GROUP BY — Group Rows
--- =========================================================
-
--- Count customers by segment
 SELECT 
     customer_segment,
     COUNT(*) AS total_customers
@@ -225,8 +206,6 @@ ORDER BY total_revenue DESC;
 -- =========================================================
 -- 8. GROUP BY with Multiple Columns
 -- =========================================================
-
--- Count customers by segment and state
 SELECT 
     customer_segment,
     state,
@@ -259,9 +238,6 @@ ORDER BY category, product_count DESC;
 
 -- =========================================================
 -- 9. HAVING — Filter Groups
--- =========================================================
-
--- Segments with more than 5 customers
 SELECT 
     customer_segment,
     COUNT(*) AS total_customers
@@ -315,20 +291,15 @@ ORDER BY total_spent DESC;
 
 -- =========================================================
 -- 10. WHERE vs HAVING (Combined Example)
--- =========================================================
-
--- Step 1: WHERE filters individual products (only Electronics)
--- Step 2: GROUP BY groups by supplier
--- Step 3: HAVING filters groups (suppliers with 2+ products)
 
 SELECT 
     supplier,
     COUNT(*) AS product_count,
     ROUND(AVG(price), 2) AS avg_price
 FROM products
-WHERE category = 'Electronics'          -- Filters rows
+WHERE category = 'Electronics'        
 GROUP BY supplier
-HAVING COUNT(*) >= 2                    -- Filters groups
+HAVING COUNT(*) >= 2                 
 ORDER BY avg_price DESC;
 
 
@@ -379,74 +350,3 @@ INNER JOIN order_items oi ON p.product_id = oi.product_id
 GROUP BY p.category
 ORDER BY total_revenue DESC;
 
-
--- =========================================================
--- 12. Practice Exercises
--- =========================================================
-
-/*
--- 1. Count total number of customers
-SELECT COUNT(*) AS total_customers FROM customers;
-
--- 2. Count customers from California (CA)
-SELECT COUNT(*) FROM customers WHERE state = 'CA';
-
--- 3. Calculate total revenue from all orders
-SELECT SUM(total_amount) AS total_revenue FROM orders;
-
--- 4. Calculate average product price
-SELECT ROUND(AVG(price), 2) AS avg_price FROM products;
-
--- 5. Find the most expensive product
-SELECT MAX(price) AS most_expensive FROM products;
-
--- 6. Count customers by customer_segment (GROUP BY)
-SELECT customer_segment, COUNT(*) FROM customers GROUP BY customer_segment;
-
--- 7. Count products by category (GROUP BY)
-SELECT category, COUNT(*) FROM products GROUP BY category;
-
--- 8. Find categories with more than 5 products (HAVING)
-SELECT category, COUNT(*) FROM products GROUP BY category HAVING COUNT(*) > 5;
-
--- 9. Average price by category, show only categories with avg > $500
-SELECT category, ROUND(AVG(price), 2) AS avg_price 
-FROM products 
-GROUP BY category 
-HAVING AVG(price) > 500;
-
--- 10. Customers who have spent more than $2000
-SELECT c.customer_id, c.first_name, c.last_name, SUM(o.total_amount) AS total_spent
-FROM customers c
-INNER JOIN orders o ON c.customer_id = o.customer_id
-GROUP BY c.customer_id, c.first_name, c.last_name
-HAVING SUM(o.total_amount) > 2000;
-*/
-
-
--- =========================================================
--- Quick Reference
--- =========================================================
-
-/*
-  Function    | Purpose                    | Example
-  ------------|----------------------------|-------------------------
-  COUNT(*)    | Count all rows             | COUNT(*) AS total
-  COUNT(col)  | Count non-NULL values      | COUNT(phone)
-  COUNT(DISTINCT) | Count unique values    | COUNT(DISTINCT state)
-  SUM(col)    | Add up values              | SUM(total_amount)
-  AVG(col)    | Calculate average          | AVG(price)
-  MIN(col)    | Find minimum               | MIN(price)
-  MAX(col)    | Find maximum               | MAX(price)
-  GROUP BY    | Group rows                 | GROUP BY category
-  HAVING      | Filter groups              | HAVING COUNT(*) > 5
-*/
-
-/*
-  Key Takeaways:
-  - WHERE filters rows, HAVING filters groups
-  - GROUP BY groups rows for aggregation
-  - Always use COALESCE for NULL handling in aggregations
-  - ORDER BY can use aliases (e.g., ORDER BY avg_price DESC)
-  - INNER JOIN is often used with GROUP BY for multi-table analysis
-*/
